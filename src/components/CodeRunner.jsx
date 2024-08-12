@@ -1,26 +1,24 @@
-import React, { useState, useCallback, useRef } from 'react';
-import Test from './Test';
-import Preview from './Preview';
+import React, { useState, useCallback, useRef } from "react";
+import Test from "./Test";
+import Preview from "./Preview";
 import {
   SandpackProvider,
   SandpackLayout,
-} from '@codesandbox/sandpack-react';
-import {
-  PanelGroup,
-  Panel,
-  PanelResizeHandle,
-} from 'react-resizable-panels';
-import { atomDark } from '@codesandbox/sandpack-themes';
+  SandpackTests,
+} from "@codesandbox/sandpack-react";
+import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
+import { atomDark } from "@codesandbox/sandpack-themes";
 
-import 'react-resizable/css/styles.css';
-import './CodeRunner.css';
-import Console from './Console';
-import FileExplorer from './FileExplorer';
-import Editor from './Editor';
+import "react-resizable/css/styles.css";
+import "./CodeRunner.css";
+import Console from "./Console";
+import FileExplorer from "./FileExplorer";
+import Editor from "./Editor";
 
 const CodeRunner = () => {
-  const [activeTab, setActiveTab] = useState('problem');
-  const [activeComponent, setActiveComponent] = useState('preview');
+  const [activeTab, setActiveTab] = useState("problem");
+  const [activeComponent, setActiveComponent] = useState("preview");
+  const [showTests, setShowTests] = useState(false);
 
   // Store the code in useRef to persist across re-renders
   const codeRef = useRef({
@@ -59,6 +57,10 @@ export default function App() {
 `,
   });
 
+  const handleTestResult = (specs) => {
+    console.log("Result: ", specs);
+  };
+
   const handleTabClick = useCallback((tab) => {
     setActiveTab(tab);
   }, []);
@@ -79,18 +81,28 @@ export default function App() {
         },
       }}
     >
-      <SandpackLayout style={{ height: '100vh', width: '100vw'}}>
+      <SandpackLayout style={{ height: "100vh", width: "100vw" }}>
         <PanelGroup direction="horizontal">
           <Panel defaultSize={30}>
-            <div style={{ display: 'flex', justifyContent: 'space-around', padding: '10px 0' }}>
-              <button onClick={() => handleTabClick('problem')}>Problem</button>
-              <button onClick={() => handleTabClick('files')}>Files</button>
-              <button onClick={() => handleTabClick('hint')}>Hint</button>
-              <button onClick={() => handleTabClick('submission')}>Submission</button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                padding: "10px 0",
+              }}
+            >
+              <button onClick={() => handleTabClick("problem")}>Problem</button>
+              <button onClick={() => handleTabClick("files")}>Files</button>
+              <button onClick={() => handleTabClick("hint")}>Hint</button>
+              <button onClick={() => handleTabClick("submission")}>
+                Submission
+              </button>
             </div>
-            {activeTab === 'files' && <FileExplorer />}
+            {activeTab === "files" && <FileExplorer />}
           </Panel>
-          <PanelResizeHandle style={{ backgroundColor: '#ccc', width: '1px' }} />
+          <PanelResizeHandle
+            style={{ backgroundColor: "#ccc", width: "1px" }}
+          />
           <Panel defaultSize={70}>
             <PanelGroup direction="vertical">
               <Panel defaultSize={80}>
@@ -98,29 +110,58 @@ export default function App() {
                   <Panel defaultSize={60}>
                     <Editor />
                   </Panel>
-                  <PanelResizeHandle style={{ backgroundColor: '#ccc', width: '1px' }} />
+                  <PanelResizeHandle
+                    style={{ backgroundColor: "#ccc", width: "1px" }}
+                  />
                   <Panel defaultSize={40}>
-                    <div style={{ display: 'flex', margin: '10px' }}>
+                    <div style={{ display: "flex", margin: "10px" }}>
                       <button
-                        onClick={() => handleComponentSwitch('preview')}
-                        style={{ marginRight: '10px' }}
+                        onClick={() => handleComponentSwitch("preview")}
+                        style={{ marginRight: "10px" }}
                       >
                         Output
                       </button>
-                      <button
-                        onClick={() => handleComponentSwitch('console')}
-                      >
+                      <button onClick={() => handleComponentSwitch("console")}>
                         Console
                       </button>
                     </div>
-                    {activeComponent === 'preview' && <Preview />}
-                    {activeComponent === 'console' && <Console />}
+                    <div
+                      style={{
+                        display:
+                          activeComponent === "preview" ? "block" : "none",
+                      }}
+                    >
+                      {" "}
+                      <Preview />{" "}
+                    </div>
+                    <div
+                      style={{
+                        display:
+                          activeComponent === "console" ? "block" : "none",
+                      }}
+                    >
+                      {" "}
+                      <Console />{" "}
+                    </div>
                   </Panel>
                 </PanelGroup>
               </Panel>
-              <PanelResizeHandle style={{ backgroundColor: '#ccc', height: '1px', width: '100%' }} />
+              <PanelResizeHandle
+                style={{
+                  backgroundColor: "#ccc",
+                  height: "1px",
+                  width: "100%",
+                }}
+              />
               <Panel defaultSize={20}>
-                <Test />
+                <button onClick={() => setShowTests(true)}>Run Tests</button>
+                <div style={{ display: showTests ? "block" : "none" }}>
+                  {" "}
+                  <SandpackTests
+                    verbose={true}
+                    onComplete={handleTestResult}
+                  />{" "}
+                </div>
               </Panel>
             </PanelGroup>
           </Panel>

@@ -1,5 +1,6 @@
 import React from 'react'
-import CodeRunner from './components/CodeRunner'
+import CodeRunner from './components/CodeRunner';
+import './App.css';
 
 
 function App() {

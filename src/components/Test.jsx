@@ -1,21 +1,19 @@
-import { useState } from 'react';
-import React from 'react'
-import {
-    
-    SandpackTests
-  } from '@codesandbox/sandpack-react';
-
+import { useState } from "react";
+import React from "react";
+import { SandpackTests } from "@codesandbox/sandpack-react";
 
 const Test = () => {
-    const [showTests, setShowTests] = useState(false);
+  const handleTestResult = (specs) => {
+    console.log('Result: ', specs);
+  }
   return (
-    <div style={{ height: '100%', overflowY: 'auto', padding: '10px' }}>
-                    <button onClick={() => setShowTests(true)} style={{ marginBottom: '10px' }}>
-                      Run Tests
-                    </button>
-                    {showTests && <SandpackTests />}
-                  </div>
-  )
-}
+    <div style={{ height: "400px", overflowY: "auto", padding: "10px" }}>
+      <SandpackTests
+        verbose={true}
+        onComplete={handleTestResult}
+      />
+    </div>
+  );
+};
 
-export default Test
+export default Test;

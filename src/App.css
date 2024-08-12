@@ -1,0 +1,3 @@
+.file-explorer > div, .file-explorer ul li > div {
+    max-width: 100% !important;
+}
